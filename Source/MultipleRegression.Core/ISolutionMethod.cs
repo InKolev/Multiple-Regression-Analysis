@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MultipleRegression.Core
+﻿namespace MultipleRegression.Core
 {
     public interface ISolutionMethod
     {
-        
+        decimal[] Solve(decimal[,] systemOfEquations);
     }
 }

@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultipleRegression.Core", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultipleRegression.ConsoleClient", "MultipleRegression.ConsoleClient\MultipleRegression.ConsoleClient.csproj", "{94DFCC63-6ED7-445B-B03B-A1994D0F766A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultipleRegression.UnitTests", "MultipleRegression.UnitTests\MultipleRegression.UnitTests.csproj", "{17DB4815-2D45-4AB3-BB99-D636D04A477B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultipleRegression.IntegrationTests", "MultipleRegression.IntegrationTests\MultipleRegression.IntegrationTests.csproj", "{F58C5187-93F9-46A7-B0AA-0E6554395608}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{94DFCC63-6ED7-445B-B03B-A1994D0F766A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94DFCC63-6ED7-445B-B03B-A1994D0F766A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94DFCC63-6ED7-445B-B03B-A1994D0F766A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17DB4815-2D45-4AB3-BB99-D636D04A477B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17DB4815-2D45-4AB3-BB99-D636D04A477B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17DB4815-2D45-4AB3-BB99-D636D04A477B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17DB4815-2D45-4AB3-BB99-D636D04A477B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F58C5187-93F9-46A7-B0AA-0E6554395608}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F58C5187-93F9-46A7-B0AA-0E6554395608}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F58C5187-93F9-46A7-B0AA-0E6554395608}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F58C5187-93F9-46A7-B0AA-0E6554395608}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

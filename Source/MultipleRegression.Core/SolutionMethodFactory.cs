@@ -1,6 +1,6 @@
 ﻿namespace MultipleRegression.Core
 {
-    public class SolutionMethodFactory
+    public class SolutionMethodFactory : ISolutionMethodFactory
     {
         public ISolutionMethod GetSolutionMethod(SolutionMethod solutionMethod)
         {

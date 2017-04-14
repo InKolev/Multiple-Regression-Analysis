@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace MultipleRegression.Core
 {
-    public class DataTableToSystemOfEquationsFormatter
+    public class DataTableToSystemOfEquationsFormatter : IDataTableFormatter
     {
         public decimal[,] Format(Dictionary<string, List<decimal>> dataTable)
         {

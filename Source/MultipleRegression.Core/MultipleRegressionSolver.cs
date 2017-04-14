@@ -8,17 +8,22 @@ namespace MultipleRegression.Core
 {
     public class MultipleRegressionSolver
     {
-        public void Solve(SolutionMethod solutionMethod, Dictionary<string, List<decimal>> historicalData)
-        {
-            var inputFormatter = new DataTableToSystemOfEquationsFormatter();
-            var formatedInput = inputFormatter.Format(historicalData);
-            // choose strategy
-            // format input for strategy
-            // solve using strategy
-            // get criterions weight from the strategy
-            // return the criterionsWeight
+        private IDataTableFormatter tableFormatter;
+        private ISolutionMethodFactory solutionFactory;
 
-            var criterionsWeight = new Dictionary<string, decimal>(); // criterion(string), weight(decimal)
+        public MultipleRegressionSolver(ISolutionMethodFactory solutionMethodFactory, IDataTableFormatter formatter)
+        {
+            this.solutionFactory = solutionMethodFactory;
+            this.tableFormatter = formatter;
+        }
+
+        public decimal Solve(SolutionMethod solutionMethod, Dictionary<string, List<decimal>> historicalData)
+        {
+            var system = this.tableFormatter.Format(historicalData);
+            var method = this.solutionFactory.GetSolutionMethod(solutionMethod);
+            var coefficients = method.Solve(system);
+
+            return 1;
         }
     }
 }
