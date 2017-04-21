@@ -14,11 +14,45 @@ namespace MultipleRegression.Core
             var rowsCount = systemOfEquations.GetLength(0);
             var colsCount = systemOfEquations.GetLength(1);
 
-            for (int i = 0; i < rowsCount; i++)
+            for (int currentRow = 0; currentRow < rowsCount; currentRow++)
             {
+                var rowsToMutate = Enumerable.Range(0, rowsCount).ToList();
+                rowsToMutate.Remove(currentRow);
+                rowsToMutate.Sort();
+                rowsToMutate.Reverse();
 
+                var columnToMutate = currentRow;
+                var a = systemOfEquations[currentRow, columnToMutate];
+
+                foreach (var rowToMutate in rowsToMutate)
+                {
+                    var b = systemOfEquations[rowToMutate, columnToMutate];
+
+                    if (!this.ShouldContinueProcessing(b))
+                    {
+                        break;
+                    }
+
+                    var multiplier = this.ComputeMultiplier(a, b);
+
+                    for (int col = 0; col < colsCount; col++)
+                    {
+                        var x = systemOfEquations[currentRow, col];
+                        var y = systemOfEquations[rowToMutate, col];
+                        var z = x * multiplier;
+
+                        systemOfEquations[rowToMutate, col] = Math.Round(y + z);
+                    }
+                }
             }
-            return new decimal[2];
+
+            var coefficients = new decimal[rowsCount];
+            for (int row = 0; row < rowsCount; row++)
+            {
+                coefficients[row] = systemOfEquations[row, colsCount - 1] / systemOfEquations[row, row];
+            }
+
+            return coefficients;
         }
 
         private bool ShouldContinueProcessing(decimal b)
@@ -33,31 +67,35 @@ namespace MultipleRegression.Core
 
         private decimal ComputeMultiplier(decimal a, decimal b)
         {
-            decimal aAbsoluteValue = Math.Abs(a);
-            decimal bAbsoluteValue = Math.Abs(b);
-
             decimal multiplier = 0m;
-            if (aAbsoluteValue > bAbsoluteValue)
+            decimal absoluteA = Math.Abs(a);
+            decimal absoluteB = Math.Abs(b);
+
+            if (absoluteA.IsGreaterThan(absoluteB))
             {
-                multiplier = 1m / (aAbsoluteValue / bAbsoluteValue);
+                multiplier = 1m / (absoluteA / absoluteB);
             }
-            else if (aAbsoluteValue < bAbsoluteValue)
+            else
             {
-                multiplier = bAbsoluteValue / aAbsoluteValue;
+                multiplier = absoluteB / absoluteA;
             }
 
-            // Decide subtraction or addition
-            if (b.IsZero())
-            {
-                // skip and continue with next rows
-            }
-            else if ((b.IsPositive() && a.IsPositive()) ||
-                (b.IsNegative() && a.IsNegative()))
+            if (this.BothNumbersArePositive(a, b) || this.BothNumbersAreNegative(a, b))
             {
                 multiplier *= -1m;
             }
 
             return multiplier;
+        }
+
+        private bool BothNumbersArePositive(decimal a, decimal b)
+        {
+            return a.IsPositive() && b.IsPositive();
+        }
+
+        private bool BothNumbersAreNegative(decimal a, decimal b)
+        {
+            return a.IsNegative() && b.IsNegative();
         }
     }
 }

@@ -17,13 +17,13 @@ namespace MultipleRegression.Core
             this.tableFormatter = formatter;
         }
 
-        public decimal Solve(SolutionMethod solutionMethod, Dictionary<string, List<decimal>> historicalData)
+        public decimal[] Solve(SolutionMethod solutionMethod, Dictionary<string, List<decimal>> historicalData)
         {
             var system = this.tableFormatter.Format(historicalData);
             var method = this.solutionFactory.GetSolutionMethod(solutionMethod);
             var coefficients = method.Solve(system);
 
-            return 1;
+            return coefficients;
         }
     }
 }
