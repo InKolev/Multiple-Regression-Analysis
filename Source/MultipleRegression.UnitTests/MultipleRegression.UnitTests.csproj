@@ -69,7 +69,6 @@
   <ItemGroup>
     <Compile Include="DataTableToSystemOfEquationsFormatterTests.cs" />
     <Compile Include="GaussianEliminationMethodTests.cs" />
-    <Compile Include="GPUvsCPUPerformanceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

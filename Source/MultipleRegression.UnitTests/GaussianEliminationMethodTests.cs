@@ -7,10 +7,9 @@
     public class GaussianEliminationMethodTests
     {
         [Test]
-        public void Solve_SystemWithSolution_ReturnsCorrectResult()
+        public void Solve_ValidSystemOfEquations_ReturnsExpectedResult()
         {
             var method = new GaussianEliminationMethod();
-
             var system = new decimal[,]
             {
                 { 1, 2, 1, 1 },
