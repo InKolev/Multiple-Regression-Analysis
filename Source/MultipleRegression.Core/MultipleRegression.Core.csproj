@@ -40,16 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExtensionMethods\DecimalExtensionMethods.cs" />
-    <Compile Include="GaussianEliminationMethod.cs" />
-    <Compile Include="DataTableToSystemOfEquationsFormatter.cs" />
-    <Compile Include="IDataTableFormatter.cs" />
-    <Compile Include="ISolutionMethod.cs" />
-    <Compile Include="ISolutionMethodFactory.cs" />
+    <Compile Include="Extensions\DoubleExtensionMethods.cs" />
+    <Compile Include="Extensions\ObjectExtensionMethods.cs" />
+    <Compile Include="SolutionMethods\GaussianEliminationSolutionMethod.cs" />
+    <Compile Include="Formatters\DataTableFormatter.cs" />
+    <Compile Include="Formatters\Interfaces\IDataTableFormatter.cs" />
+    <Compile Include="SolutionMethods\Interfaces\ISolutionMethod.cs" />
+    <Compile Include="Factories\Interfaces\ISolutionMethodFactory.cs" />
     <Compile Include="MultipleRegressionSolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SolutionMethod.cs" />
-    <Compile Include="SolutionMethodFactory.cs" />
+    <Compile Include="SolutionMethods\SolutionMethodType.cs" />
+    <Compile Include="Factories\SolutionMethodFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

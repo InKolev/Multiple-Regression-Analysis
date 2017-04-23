@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MultipleRegression.Core;
-using MultipleRegression.Core.ExtensionMethods;
+using MultipleRegression.Core.Factories;
+using MultipleRegression.Core.Formatters;
+using MultipleRegression.Core.SolutionMethods;
 
 namespace MultipleRegression.ConsoleClient
 {
@@ -12,29 +12,36 @@ namespace MultipleRegression.ConsoleClient
     {
         public static void Main(string[] args)
         {
-            var solutionFactory = new SolutionMethodFactory();
-            var tableFormatter = new DataTableToSystemOfEquationsFormatter();
-
-            var multipleRegressionSolver = 
-                new MultipleRegressionSolver(
-                    solutionFactory, 
-                    tableFormatter);
-
             var historicalData = GetHistoricalData();
+
+            var regressionSolver = 
+                new MultipleRegressionSolver(
+                    new SolutionMethodFactory(),
+                    new DataTableFormatter());
+
             var coefficients = 
-                multipleRegressionSolver.Solve(
-                    SolutionMethod.GaussianEliminationMethod, 
+                regressionSolver.Solve(
+                    SolutionMethodType.GaussianElimination,
                     historicalData);
+
+            Console.WriteLine(
+                String.Join(
+                    separator: ", ", 
+                    values: coefficients.Select(x => Math.Round(x, 5))));
+
+            var inputRow = new double[] { 983, 2896, 120 };
+            var Zk = regressionSolver.Classify(inputRow, coefficients);
+            Console.WriteLine(Zk);
         }
 
-        public static Dictionary<string, List<decimal>> GetHistoricalData()
+        public static Dictionary<string, List<double>> GetHistoricalData()
         {
-            return new Dictionary<string, List<decimal>>()
+            return new Dictionary<string, List<double>>()
             {
-                {"w", new List<decimal> { 1142m, 863m, 1065m, 554m, 983m, 256m } },
-                {"x", new List<decimal> { 1060m, 995m, 3205m, 120m, 2896m, 485m } },
-                {"y", new List<decimal> { 325m, 98m, 23m, 0m, 120m, 88m } },
-                {"z", new List<decimal> { 201m, 98m, 162m, 54m, 138m, 61m } }
+                {"w", new List<double> { 1142, 863, 1065, 554, 983, 256 } },
+                {"x", new List<double> { 1060, 995, 3205, 120, 2896, 485 } },
+                {"y", new List<double> { 325, 98d, 23d, 0d, 120, 88d } },
+                {"z", new List<double> { 201, 98d, 162, 54d, 138, 61d } }
             };
         }
     }

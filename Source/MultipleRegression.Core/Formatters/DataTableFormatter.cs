@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MultipleRegression.Core.Formatters.Interfaces;
 
-namespace MultipleRegression.Core
+namespace MultipleRegression.Core.Formatters
 {
-    public class DataTableToSystemOfEquationsFormatter : IDataTableFormatter
+    public class DataTableFormatter : IDataTableFormatter
     {
-        public decimal[,] Format(Dictionary<string, List<decimal>> dataTable)
+        public double[,] Format(Dictionary<string, List<double>> dataTable)
         {
             var criterionsNames = dataTable.Keys.ToList();
             var criterionsCount = criterionsNames.Count;
@@ -15,7 +16,7 @@ namespace MultipleRegression.Core
             var rowsCount = criterionsCount;
             var colsCount = criterionsCount + 1;
 
-            var systemOfEquations = new decimal[rowsCount, colsCount];
+            var systemOfEquations = new double[rowsCount, colsCount];
 
             // Build first equation
             systemOfEquations[0, 0] = dataTableRowsCount;
@@ -60,14 +61,14 @@ namespace MultipleRegression.Core
             return systemOfEquations;
         }
 
-        private decimal SumOfMultiplications(List<decimal> firstList, List<decimal> secondList)
+        private double SumOfMultiplications(List<double> firstList, List<double> secondList)
         {
             if (firstList.Count != secondList.Count)
             {
                 throw new InvalidOperationException("Cannot apply operation on sets of different magnitude");
             }
 
-            decimal result = 0;
+            double result = 0;
 
             checked
             {
@@ -80,9 +81,9 @@ namespace MultipleRegression.Core
             return result;
         }
 
-        private decimal SumElements(List<decimal> list)
+        private double SumElements(List<double> list)
         {
-            var sum = default(decimal);
+            var sum = default(double);
 
             for (int i = 0; i < list.Count; i++)
             {

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using MultipleRegression.Core.Factories.Interfaces;
+using MultipleRegression.Core.Formatters.Interfaces;
+using MultipleRegression.Core.SolutionMethods;
 
 namespace MultipleRegression.Core
 {
@@ -17,13 +16,25 @@ namespace MultipleRegression.Core
             this.tableFormatter = formatter;
         }
 
-        public decimal[] Solve(SolutionMethod solutionMethod, Dictionary<string, List<decimal>> historicalData)
+        public double[] Solve(SolutionMethodType solutionMethod, Dictionary<string, List<double>> historicalData)
         {
             var system = this.tableFormatter.Format(historicalData);
             var method = this.solutionFactory.GetSolutionMethod(solutionMethod);
             var coefficients = method.Solve(system);
 
             return coefficients;
+        }
+
+        public double Classify(double[] input, double[] coefficientsWeight)
+        {
+            double result = coefficientsWeight[0];
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                result += coefficientsWeight[i + 1] * input[i];
+            }
+
+            return result;
         }
     }
 }

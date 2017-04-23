@@ -1,15 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MultipleRegression.Core.ExtensionMethods;
+using MultipleRegression.Core.Extensions;
+using MultipleRegression.Core.Interfaces;
 
-namespace MultipleRegression.Core
+namespace MultipleRegression.Core.SolutionMethods
 {
-    public class GaussianEliminationMethod : ISolutionMethod
+    public class GaussianEliminationSolutionMethod : ISolutionMethod
     {
-        public decimal[] Solve(decimal[,] systemOfEquations)
+        public double[] Solve(double[,] systemOfEquations)
+        {
+            this.ValidateArguments(systemOfEquations);
+
+            this.SolveSystem(systemOfEquations);
+
+            var coefficients = this.ComputeCoefficients(systemOfEquations);
+
+            return coefficients;
+        }
+
+        private void ValidateArguments(double[,] systemOfEquations)
+        {
+            if (systemOfEquations.IsNull())
+            {
+                var nullParameterName = nameof(systemOfEquations);
+                var nullParameterType = systemOfEquations.GetType().Name;
+                var exceptionMessage = $"Argument '{nullParameterName}' of type '{nullParameterType}' should not be null";
+
+                throw new ArgumentNullException(nullParameterName, exceptionMessage);
+            }
+        }
+
+        private void SolveSystem(double[,] systemOfEquations)
         {
             var rowsCount = systemOfEquations.GetLength(0);
             var colsCount = systemOfEquations.GetLength(1);
@@ -45,8 +66,14 @@ namespace MultipleRegression.Core
                     }
                 }
             }
+        }
 
-            var coefficients = new decimal[rowsCount];
+        private double[] ComputeCoefficients(double[,] systemOfEquations)
+        {
+            var rowsCount = systemOfEquations.GetLength(0);
+            var colsCount = systemOfEquations.GetLength(1);
+            var coefficients = new double[rowsCount];
+
             for (int row = 0; row < rowsCount; row++)
             {
                 coefficients[row] = systemOfEquations[row, colsCount - 1] / systemOfEquations[row, row];
@@ -55,7 +82,7 @@ namespace MultipleRegression.Core
             return coefficients;
         }
 
-        private bool ShouldContinueProcessing(decimal b)
+        private bool ShouldContinueProcessing(double b)
         {
             if (b.IsZero())
             {
@@ -65,15 +92,15 @@ namespace MultipleRegression.Core
             return true;
         }
 
-        private decimal ComputeMultiplier(decimal a, decimal b)
+        private double ComputeMultiplier(double a, double b)
         {
-            decimal multiplier = 0m;
-            decimal absoluteA = Math.Abs(a);
-            decimal absoluteB = Math.Abs(b);
+            double multiplier = 0d;
+            double absoluteA = Math.Abs(a);
+            double absoluteB = Math.Abs(b);
 
             if (absoluteA.IsGreaterThan(absoluteB))
             {
-                multiplier = 1m / (absoluteA / absoluteB);
+                multiplier = 1d / (absoluteA / absoluteB);
             }
             else
             {
@@ -82,18 +109,18 @@ namespace MultipleRegression.Core
 
             if (this.BothNumbersArePositive(a, b) || this.BothNumbersAreNegative(a, b))
             {
-                multiplier *= -1m;
+                multiplier *= -1d;
             }
 
             return multiplier;
         }
 
-        private bool BothNumbersArePositive(decimal a, decimal b)
+        private bool BothNumbersArePositive(double a, double b)
         {
             return a.IsPositive() && b.IsPositive();
         }
 
-        private bool BothNumbersAreNegative(decimal a, decimal b)
+        private bool BothNumbersAreNegative(double a, double b)
         {
             return a.IsNegative() && b.IsNegative();
         }

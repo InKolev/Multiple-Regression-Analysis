@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using MultipleRegression.Core;
+using MultipleRegression.Core.Formatters;
 using NUnit.Framework;
 
 namespace MultipleRegression.UnitTests
@@ -7,32 +7,39 @@ namespace MultipleRegression.UnitTests
     [TestFixture]
     public class DataTableToSystemOfEquationsFormatterTests
     {
+        private DataTableFormatter dataTableFormatter;
+
+        [SetUp]
+        public void TestSetup()
+        {
+            this.dataTableFormatter = new DataTableFormatter();
+        }
+
         [Test]
         public void Format_WhenPassedValidDataTable_ReturnsCorrectlyComputedSystemOfEquations()
         {
             var dataTable = this.GetDataTable();
-            var expectedSystemOfEquations = this.GetSystemOfEquations();
-            var formatter = new DataTableToSystemOfEquationsFormatter();
+            var expectedSystemOfEquations = this.GetExpectedSystemOfEquations();
 
-            var actualSystemOfEquations = formatter.Format(dataTable);
+            var actualSystemOfEquations = this.dataTableFormatter.Format(dataTable);
 
             Assert.AreEqual(expectedSystemOfEquations, actualSystemOfEquations);
         }
 
-        private Dictionary<string, List<decimal>> GetDataTable()
+        private Dictionary<string, List<double>> GetDataTable()
         {
-            return new Dictionary<string, List<decimal>>()
+            return new Dictionary<string, List<double>>()
             {
-                {"w", new List<decimal> { 1142m, 863m, 1065m, 554m, 983m, 256m } },
-                {"x", new List<decimal> { 1060m, 995m, 3205m, 120m, 2896m, 485m } },
-                {"y", new List<decimal> { 325m, 98m, 23m, 0m, 120m, 88m } },
-                {"z", new List<decimal> { 201m, 98m, 162m, 54m, 138m, 61m } }
+                {"w", new List<double> { 1142, 863, 1065, 554, 983, 256 } },
+                {"x", new List<double> { 1060, 995, 3205, 120, 2896, 485 } },
+                {"y", new List<double> { 325, 98d, 23d, 0d, 120, 88d } },
+                {"z", new List<double> { 201, 98d, 162, 54d, 138, 61d } }
             };
         }
 
-        private decimal[,] GetSystemOfEquations()
+        private double[,] GetExpectedSystemOfEquations()
         {
-            return new decimal[,]
+            return new double[,]
             {
                 { 6, 4863, 8761, 654, 714 },
                 { 4863, 4521899, 8519938, 620707, 667832 },
