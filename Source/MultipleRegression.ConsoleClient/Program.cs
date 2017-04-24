@@ -14,19 +14,19 @@ namespace MultipleRegression.ConsoleClient
         {
             var historicalData = GetHistoricalData();
 
-            var regressionSolver = 
+            var regressionSolver =
                 new MultipleRegressionSolver(
                     new SolutionMethodFactory(),
                     new DataTableFormatter());
 
-            var coefficients = 
+            var coefficients =
                 regressionSolver.Solve(
                     SolutionMethodType.GaussianElimination,
                     historicalData);
 
             Console.WriteLine(
                 String.Join(
-                    separator: ", ", 
+                    separator: ", ",
                     values: coefficients.Select(x => Math.Round(x, 5))));
 
             var inputRow = new double[] { 983, 2896, 120 };

@@ -49,7 +49,7 @@ namespace MultipleRegression.Core.SolutionMethods
                 {
                     var b = systemOfEquations[rowToMutate, columnToMutate];
 
-                    if (!this.ShouldContinueProcessing(b))
+                    if (b.IsZero())
                     {
                         break;
                     }
@@ -76,24 +76,27 @@ namespace MultipleRegression.Core.SolutionMethods
 
             for (int row = 0; row < rowsCount; row++)
             {
-                coefficients[row] = systemOfEquations[row, colsCount - 1] / systemOfEquations[row, row];
+                var a = systemOfEquations[row, colsCount - 1];
+                var b = systemOfEquations[row, row];
+
+                if (this.AnyArgumentIsZero(a, b))
+                {
+                    throw new InvalidOperationException($"Arguments should never be zero when all previous conditions are met.");
+                }
+
+                coefficients[row] = a / b;
             }
 
             return coefficients;
         }
 
-        private bool ShouldContinueProcessing(double b)
-        {
-            if (b.IsZero())
-            {
-                return false;
-            }
-
-            return true;
-        }
-
         private double ComputeMultiplier(double a, double b)
         {
+            if (this.AnyArgumentIsZero(a,b))
+            {
+                throw new InvalidOperationException($"Arguments should never be zero when all previous conditions are met.");
+            }
+
             double multiplier = 0d;
             double absoluteA = Math.Abs(a);
             double absoluteB = Math.Abs(b);
@@ -107,7 +110,7 @@ namespace MultipleRegression.Core.SolutionMethods
                 multiplier = absoluteB / absoluteA;
             }
 
-            if (this.BothNumbersArePositive(a, b) || this.BothNumbersAreNegative(a, b))
+            if (this.BothArgumentsArePositive(a, b) || this.BothArgumentsAreNegative(a, b))
             {
                 multiplier *= -1d;
             }
@@ -115,14 +118,19 @@ namespace MultipleRegression.Core.SolutionMethods
             return multiplier;
         }
 
-        private bool BothNumbersArePositive(double a, double b)
+        private bool BothArgumentsArePositive(double a, double b)
         {
             return a.IsPositive() && b.IsPositive();
         }
 
-        private bool BothNumbersAreNegative(double a, double b)
+        private bool BothArgumentsAreNegative(double a, double b)
         {
             return a.IsNegative() && b.IsNegative();
+        }
+
+        private bool AnyArgumentIsZero(double a, double b)
+        {
+            return a.IsZero() || b.IsZero();
         }
     }
 }
