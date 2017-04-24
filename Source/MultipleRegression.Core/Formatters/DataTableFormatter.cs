@@ -18,7 +18,7 @@ namespace MultipleRegression.Core.Formatters
 
             var systemOfEquations = new double[rowsCount, colsCount];
 
-            // Build first equation
+            // Build first row
             systemOfEquations[0, 0] = dataTableRowsCount;
             for (int row = 0, col = 1; col < colsCount; col++)
             {
@@ -29,31 +29,32 @@ namespace MultipleRegression.Core.Formatters
                 systemOfEquations[row, col] = criterionSum;
             }
 
-            // Build next N - 1 equations
+            // Build first column
+            for (int row = 1, col = 0; row < rowsCount; row++)
+            {
+                systemOfEquations[row, col] = systemOfEquations[col, row];
+            }
+
+            // Build remaining rows
             for (int row = 1; row < rowsCount; row++)
             {
-                for (int col = 0; col < colsCount; col++)
+                for (int col = 1; col < colsCount; col++)
                 {
-                    if (col == 0)
-                    {
-                        var criterionKeyForSum = criterionsNames[row - 1];
-                        var criterionSum = dataTable[criterionKeyForSum].Sum();
-                        systemOfEquations[row, col] = criterionSum;
-                        continue;
-                    }
-
                     if (row == col)
                     {
-                        var criterionKeyForSquare = criterionsNames[row - 1];
-                        var criterionSquaredSum = dataTable[criterionKeyForSquare].Sum(x => x * x);
-                        systemOfEquations[row, col] = criterionSquaredSum;
+                        var criterionName = criterionsNames[row - 1];
+                        var sumOfSquares = dataTable[criterionName].Sum(x => x * x);
+                        systemOfEquations[row, col] = sumOfSquares;
                     }
                     else
                     {
-                        var firstCriterionKeyForMultiply = criterionsNames[row - 1];
-                        var secondCriterionKeyForMultiply = criterionsNames[col - 1];
-                        var criterionSumOfMultiplications = this.SumOfMultiplications(dataTable[firstCriterionKeyForMultiply], dataTable[secondCriterionKeyForMultiply]);
-                        systemOfEquations[row, col] = criterionSumOfMultiplications;
+                        var firstCriterionName = criterionsNames[row - 1];
+                        var secondCriterionName = criterionsNames[col - 1];
+                        var sumOfCriterionsMultiplication = 
+                            this.SumOfMultiplications(
+                                dataTable[firstCriterionName],
+                                dataTable[secondCriterionName]);
+                        systemOfEquations[row, col] = sumOfCriterionsMultiplication;
                     }
                 }
             }
