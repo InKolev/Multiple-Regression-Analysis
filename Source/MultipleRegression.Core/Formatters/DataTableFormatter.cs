@@ -9,6 +9,8 @@ namespace MultipleRegression.Core.Formatters
     {
         public double[,] Format(Dictionary<string, List<double>> dataTable)
         {
+            this.ValidateFormatArguments(dataTable);
+
             var criterionsNames = dataTable.Keys.ToList();
             var criterionsCount = criterionsNames.Count;
             var dataTableRowsCount = dataTable.First().Value.Count;
@@ -29,13 +31,13 @@ namespace MultipleRegression.Core.Formatters
                 systemOfEquations[row, col] = criterionSum;
             }
 
-            // Build first column
+            // Build first col
             for (int row = 1, col = 0; row < rowsCount; row++)
             {
                 systemOfEquations[row, col] = systemOfEquations[col, row];
             }
 
-            // Build remaining rows
+            // Build remaining rows and cols
             for (int row = 1; row < rowsCount; row++)
             {
                 for (int col = 1; col < colsCount; col++)
@@ -50,7 +52,7 @@ namespace MultipleRegression.Core.Formatters
                     {
                         var firstCriterionName = criterionsNames[row - 1];
                         var secondCriterionName = criterionsNames[col - 1];
-                        var sumOfCriterionsMultiplication = 
+                        var sumOfCriterionsMultiplication =
                             this.SumOfMultiplications(
                                 dataTable[firstCriterionName],
                                 dataTable[secondCriterionName]);
@@ -60,6 +62,30 @@ namespace MultipleRegression.Core.Formatters
             }
 
             return systemOfEquations;
+        }
+
+        private void ValidateFormatArguments(Dictionary<string, List<double>> dataTable)
+        {
+            if (dataTable == null ||
+                dataTable.Any(x => x.Key == null || x.Value == null))
+            {
+                throw new ArgumentNullException("Cannot create a system of equations from null entries");
+            }
+
+            if (dataTable.Count == 0)
+            {
+                throw new ArgumentOutOfRangeException("Cannot create a system of equations from empty data table");
+            }
+
+            var firstRowLength = dataTable.FirstOrDefault().Value.Count;
+
+            foreach (var row in dataTable)
+            {
+                if (row.Value.Count != firstRowLength)
+                {
+                    throw new ArgumentException("Cannot create system of equations from inconsistent data rows");
+                }
+            }
         }
 
         private double SumOfMultiplications(List<double> firstList, List<double> secondList)

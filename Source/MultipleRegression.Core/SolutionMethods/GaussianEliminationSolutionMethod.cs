@@ -9,21 +9,20 @@ namespace MultipleRegression.Core.SolutionMethods
     {
         public double[] Solve(double[,] systemOfEquations)
         {
-            this.ValidateArguments(systemOfEquations);
+            this.ValidateSolveArguments(systemOfEquations);
 
             this.SolveSystem(systemOfEquations);
-
             var coefficients = this.ComputeCoefficients(systemOfEquations);
 
             return coefficients;
         }
 
-        private void ValidateArguments(double[,] systemOfEquations)
+        private void ValidateSolveArguments(double[,] systemOfEquations)
         {
-            if (systemOfEquations.IsNull())
+            if (systemOfEquations == null)
             {
                 var nullParameterName = nameof(systemOfEquations);
-                var nullParameterType = systemOfEquations.GetType().Name;
+                var nullParameterType = typeof(double[,]).Name;
                 var exceptionMessage = $"Argument '{nullParameterName}' of type '{nullParameterType}' should not be null";
 
                 throw new ArgumentNullException(nullParameterName, exceptionMessage);

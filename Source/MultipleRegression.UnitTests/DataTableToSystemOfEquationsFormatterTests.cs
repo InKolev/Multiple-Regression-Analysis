@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using MultipleRegression.Core.Formatters;
 using NUnit.Framework;
 
@@ -26,8 +28,47 @@ namespace MultipleRegression.UnitTests
             Assert.AreEqual(expectedSystemOfEquations, actualSystemOfEquations);
         }
 
-        private Dictionary<string, List<double>> GetDataTable()
+        [Test]
+        public void Format_DataTableIsEmpty_ThrowsArgumentOutOfRangeException()
         {
+            var dataTable = GetDataTable(isEmpty: true);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => this.dataTableFormatter.Format(dataTable));
+        }
+
+        [Test]
+        public void Format_DataTableIsNull_ThrowsArgumentNullException()
+        {
+            var dataTable = (Dictionary<string, List<double>>)null;
+
+            Assert.Throws<ArgumentNullException>(() => this.dataTableFormatter.Format(dataTable));
+        }
+
+        [Test]
+        public void Format_DataTableContainsEntryWithNullValue_ThrowsArgumentNullException()
+        {
+            var dataTable = this.GetDataTable();
+            dataTable.Add("nullKey", null);
+
+            Assert.Throws<ArgumentNullException>(() => this.dataTableFormatter.Format(dataTable));
+        }
+
+        [Test]
+        public void Format_InconsistentDataTableRows_ThrowsArgumentException()
+        {
+            var dataTable = GetDataTable();
+            dataTable.FirstOrDefault().Value.Add(123);
+
+            Assert.Throws<ArgumentException>(() => this.dataTableFormatter.Format(dataTable));
+        }
+
+        private Dictionary<string, List<double>> GetDataTable(bool isEmpty = false)
+        {
+            if (isEmpty)
+            {
+                return new Dictionary<string, List<double>>();
+            }
+
             return new Dictionary<string, List<double>>()
             {
                 {"w", new List<double> { 1142, 863, 1065, 554, 983, 256 } },

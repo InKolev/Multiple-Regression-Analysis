@@ -1,4 +1,5 @@
-﻿using MultipleRegression.Core.Interfaces;
+﻿using System;
+using MultipleRegression.Core.Interfaces;
 using MultipleRegression.Core.SolutionMethods;
 using NUnit.Framework;
 
@@ -47,6 +48,35 @@ namespace MultipleRegression.UnitTests
             var actualResult = this.solutionMethod.Solve(systemToSolve);
 
             this.AssertArraysAreEqual(expectedResult, actualResult);
+        }
+
+        [Test]
+        public void Solve_ValidSystemOfEquations_ReturnsExpectedResult_ThirdCase()
+        {
+            var systemToSolve = new double[,]
+            {
+                { 6, 4863, 8761, 654, 714 },
+                { 4863, 4521899, 8519938, 620707, 667832 },
+                { 8761, 0, 21022091, 905925, 1265493 },
+                { 0, 620707, 905925, 137902, 100583 }
+            };
+            var expectedResult = new double[] { 20, 0.012576, 0.043528, 0.38682 };
+
+            var actualResult = this.solutionMethod.Solve(systemToSolve);
+
+            this.AssertArraysAreEqual(expectedResult, actualResult);
+        }
+
+        [Test]
+        public void Solve_NullSystemOfEquations_ThrowsArgumentNullException()
+        {
+            double[,] systemOfEquations = null;
+
+            var exc = Assert.Throws<ArgumentNullException>(() => this.solutionMethod.Solve(systemOfEquations));
+
+            var expectedExceptionMessage = $"Argument '{nameof(systemOfEquations)}'";
+            var actualExceptionMessage = exc.Message;
+            StringAssert.Contains(expectedExceptionMessage, actualExceptionMessage);
         }
 
         private void AssertArraysAreEqual(double[] expected, double[] actual)

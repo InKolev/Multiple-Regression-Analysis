@@ -41,7 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\DoubleExtensionMethods.cs" />
-    <Compile Include="Extensions\ObjectExtensionMethods.cs" />
     <Compile Include="SolutionMethods\GaussianEliminationSolutionMethod.cs" />
     <Compile Include="Formatters\DataTableFormatter.cs" />
     <Compile Include="Formatters\Interfaces\IDataTableFormatter.cs" />
