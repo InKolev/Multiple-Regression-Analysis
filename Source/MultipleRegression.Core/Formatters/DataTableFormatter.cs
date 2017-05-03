@@ -66,8 +66,7 @@ namespace MultipleRegression.Core.Formatters
 
         private void ValidateFormatArguments(Dictionary<string, List<double>> dataTable)
         {
-            if (dataTable == null ||
-                dataTable.Any(x => x.Key == null || x.Value == null))
+            if (dataTable == null || dataTable.Any(x => x.Value == null))
             {
                 throw new ArgumentNullException("Cannot create a system of equations from null entries");
             }

@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace MultipleRegression.UnitTests
 {
     [TestFixture]
-    public class DataTableToSystemOfEquationsFormatterTests
+    public class DataTableFormatterTests
     {
         private DataTableFormatter dataTableFormatter;
 

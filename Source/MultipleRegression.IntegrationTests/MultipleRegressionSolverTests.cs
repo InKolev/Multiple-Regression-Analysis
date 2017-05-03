@@ -4,6 +4,7 @@ using MultipleRegression.Core.Factories;
 using MultipleRegression.Core.Formatters;
 using MultipleRegression.Core.SolutionMethods;
 using NUnit.Framework;
+using System;
 
 namespace MultipleRegression.IntegrationTests
 {
@@ -16,9 +17,9 @@ namespace MultipleRegression.IntegrationTests
         [SetUp]
         public void TestSetup()
         {
-            this.solver = 
+            this.solver =
                 new MultipleRegressionSolver(
-                    new SolutionMethodFactory(), 
+                    new SolutionMethodFactory(),
                     new DataTableFormatter());
         }
 
@@ -26,7 +27,7 @@ namespace MultipleRegression.IntegrationTests
         public void Solve_ValidDataTable_ReturnsExpectedResult_FirstCase()
         {
             var dataTable = this.GetDataTableForFirstTestCase();
-            var expectedResult = this.GetExpectedResultForFirstTestCase();
+            var expectedResult = this.GetExpectedResultForSolveFirstTestCase();
 
             var actualResult = this.solver.Solve(SolutionMethodType.GaussianElimination, dataTable);
 
@@ -37,12 +38,80 @@ namespace MultipleRegression.IntegrationTests
         public void Solve_ValidDataTable_ReturnsExpectedResult_SecondCase()
         {
             var dataTable = this.GetDataTableForSecondTestCase();
-            var expectedResult = this.GetExpectedResultForSecondTestCase();
+            var expectedResult = this.GetExpectedResultForSolveSecondTestCase();
 
             var actualResult = this.solver.Solve(SolutionMethodType.GaussianElimination, dataTable);
 
             AssertArraysAreEqual(expectedResult, actualResult, Delta);
         }
+
+
+        [Test]
+        public void Solve_NullDataTable_ThrowsArgumentNullException()
+        {
+            var dataTable = (Dictionary<string, List<double>>)null;
+
+            Assert.Throws<ArgumentNullException>(() => this.solver.Solve(SolutionMethodType.GaussianElimination, dataTable));
+        }
+
+        [Test]
+        public void Classify_ValidArguments_ReturnsExpectedResult()
+        {
+            var dataTable = GetDataTableForSecondTestCase();
+            var coefficients = this.solver.Solve(SolutionMethodType.GaussianElimination, dataTable);
+            var inputRow = new double[] { 983, 2896, 120 };
+            var expected = 156.78;
+
+            var actual = this.solver.Classify(inputRow, coefficients);
+
+            Assert.AreEqual(expected, actual, delta: 0.01);
+        }
+
+        [Test]
+        public void Classify_NullInputRow_ThrowsArgumentNullException()
+        {
+            var dataTable = GetDataTableForSecondTestCase();
+            var coefficients = new double[] { 32, 12, 42, 14 };
+            var inputRow = (double[])null;
+
+            var exc = Assert.Throws<ArgumentNullException>(() => this.solver.Classify(inputRow, coefficients));
+
+            var actualExceptionMessage = exc.Message;
+            var expectedToContainExceptionMessage = nameof(inputRow);
+            var expectedToNotContainExceptionMessage = nameof(coefficients);
+            StringAssert.Contains(expectedToContainExceptionMessage, actualExceptionMessage);
+            StringAssert.DoesNotContain(expectedToNotContainExceptionMessage, actualExceptionMessage);
+        }
+
+        [Test]
+        public void Classify_NullICoefficients_ThrowsArgumentNullException()
+        {
+            var dataTable = GetDataTableForSecondTestCase();
+            var coefficients = (double[])null;
+            var inputRow = new double[] { 983, 2896, 120 };
+
+            var exc = Assert.Throws<ArgumentNullException>(() => this.solver.Classify(inputRow, coefficients));
+
+            var actualExceptionMessage = exc.Message;
+            var expectedToContainExceptionMessage = nameof(coefficients);
+            var expectedToNotContainExceptionMessage = nameof(inputRow);
+            StringAssert.Contains(expectedToContainExceptionMessage, actualExceptionMessage);
+            StringAssert.DoesNotContain(expectedToNotContainExceptionMessage, actualExceptionMessage);
+        }
+
+        [TestCase(new double[] { 1 }, new double[] { 1 })]
+        [TestCase(new double[] { 1, 2 }, new double[] { 1, 2 })]
+        [TestCase(new double[] { 1, 2, 3, 4 }, new double[] { 1, 2, 3, 4 })]
+        [TestCase(new double[] { 1, 2, 3, 4, 5 }, new double[] { 1, 2, 3, 4 })]
+        [TestCase(new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, new double[] { 1, 2, 3, 4 })]
+        [TestCase(new double[] { 1, 2, 3, 4 }, new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })]
+        public void Classify_ArgumentsWithInvalidLength_ThrowsArgumentNullException_FirstCase(double[] inputRow, double[] coefficients)
+        {
+            var dataTable = GetDataTableForSecondTestCase();
+
+            var exc = Assert.Throws<ArgumentOutOfRangeException>(() => this.solver.Classify(inputRow, coefficients));
+        }
+
 
         private Dictionary<string, List<double>> GetDataTableForFirstTestCase()
         {
@@ -66,12 +135,12 @@ namespace MultipleRegression.IntegrationTests
             };
         }
 
-        private double[] GetExpectedResultForFirstTestCase()
+        private double[] GetExpectedResultForSolveFirstTestCase()
         {
             return new double[] { 0.56645, 0.06533, 0.008719, 0.15105 };
         }
 
-        private double[] GetExpectedResultForSecondTestCase()
+        private double[] GetExpectedResultForSolveSecondTestCase()
         {
             return new double[] { 6.7013, 0.0784, 0.0150, 0.2461 };
         }

@@ -51,7 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataTableToSystemOfEquationsFormatterTests.cs" />
+    <Compile Include="DataTableFormatterTests.cs" />
     <Compile Include="DoubleExtensionMethodsTests.cs" />
     <Compile Include="GaussianEliminationMethodTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

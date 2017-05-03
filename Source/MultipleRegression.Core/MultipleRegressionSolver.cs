@@ -2,6 +2,7 @@
 using MultipleRegression.Core.Factories.Interfaces;
 using MultipleRegression.Core.Formatters.Interfaces;
 using MultipleRegression.Core.SolutionMethods;
+using System;
 
 namespace MultipleRegression.Core
 {
@@ -18,6 +19,8 @@ namespace MultipleRegression.Core
 
         public double[] Solve(SolutionMethodType solutionMethod, Dictionary<string, List<double>> historicalData)
         {
+            this.ValidateSolveArguments(historicalData);
+
             var system = this.tableFormatter.Format(historicalData);
             var method = this.solutionFactory.GetSolutionMethod(solutionMethod);
             var coefficients = method.Solve(system);
@@ -25,16 +28,43 @@ namespace MultipleRegression.Core
             return coefficients;
         }
 
-        public double Classify(double[] input, double[] coefficientsWeight)
+        public double Classify(double[] inputRow, double[] coefficients)
         {
-            double result = coefficientsWeight[0];
+            this.ValidateClassifyArguments(inputRow, coefficients);
 
-            for (int i = 0; i < input.Length; i++)
+            double result = coefficients[0];
+            for (int i = 0; i < inputRow.Length; i++)
             {
-                result += coefficientsWeight[i + 1] * input[i];
+                result += coefficients[i + 1] * inputRow[i];
             }
 
             return result;
+        }
+
+        private void ValidateSolveArguments(Dictionary<string, List<double>> historicalData)
+        {
+            if (historicalData == null)
+            {
+                throw new ArgumentNullException($"Cannot solve for null value of parameter: \"{nameof(historicalData)}\"");
+            }
+        }
+
+        private void ValidateClassifyArguments(double[] inputRow, double[] coefficients)
+        {
+            if (inputRow == null)
+            {
+                throw new ArgumentNullException($"Cannot classify for null value of parameter: \"{nameof(inputRow)}\"");
+            }
+
+            if (coefficients == null)
+            {
+                throw new ArgumentNullException($"Cannot classify for null value of parameter: \"{nameof(coefficients)}\"");
+            }
+
+            if (inputRow.Length != coefficients.Length - 1)
+            {
+                throw new ArgumentOutOfRangeException($"{nameof(inputRow)} length should be with 1 lesser than the length of {nameof(coefficients)}");
+            }
         }
     }
 }
