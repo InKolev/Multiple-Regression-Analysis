@@ -90,11 +90,6 @@ namespace MultipleRegression.Core.Formatters
 
         private double SumOfMultiplications(List<double> firstList, List<double> secondList)
         {
-            if (firstList.Count != secondList.Count)
-            {
-                throw new InvalidOperationException("Cannot apply operation on sets of different magnitude");
-            }
-
             double result = 0;
 
             checked
@@ -106,18 +101,6 @@ namespace MultipleRegression.Core.Formatters
             }
 
             return result;
-        }
-
-        private double SumElements(List<double> list)
-        {
-            var sum = default(double);
-
-            for (int i = 0; i < list.Count; i++)
-            {
-                sum += list[i];
-            }
-
-            return sum;
         }
     }
 }
